@@ -1,0 +1,38 @@
+version: "3"
+
+networks:
+  sparql:
+    driver: bridge
+services:
+  vocbench3:
+    build: ./vocbench3
+    image: vocbench
+    ports:
+    - "8092:1979"
+    volumes:
+    - "$PWD/data/stdata:/opt/vocbench3/data"
+    networks:
+      - sparql
+  # showvoc:
+  #   build: ./showvoc
+  #   image: showvoc
+  #   ports:
+  #   - "8093:1979"
+  #   volumes:
+  #   - "$PWD/data/showvoc-stdata:/opt/showvoc/data"
+  #   networks:
+  #     - sparql
+    
+  # vocprez:
+  #   build: ./vocprez
+  #   image: vocprez
+  #   restart: unless-stopped
+  #   ports:
+  #   - "8095:5000"
+  #   volumes:
+  #   - $PWD/vocprez/config-vocprez.py:/vocprez/_config/__init__.py
+  #   stdin_open: true
+  #   tty: true
+  #   networks:
+  #     - sparql
+      
