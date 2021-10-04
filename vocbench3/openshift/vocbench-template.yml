@@ -76,6 +76,25 @@ objects:
             - name: vocbench-${env}
               persistentVolumeClaim:
                 claimName: vocbench-${env}
+          initContainers:
+            - resources: {}
+              terminationMessagePath: /dev/termination-log
+              name: init-solr-data
+              command:
+                - /bin/sh
+                - '-c'
+              securityContext:
+                privileged: true
+                runAsUser: 0
+                readOnlyRootFilesystem: false
+              imagePullPolicy: IfNotPresent
+              volumeMounts:
+                - name: vocbench-${env}
+                  mountPath: /opt/vocbench3/data
+              terminationMessagePolicy: File
+              image: busybox
+              args:
+                - 'chmod 755  -R  /opt/vocbench3/ ; chown 100:101 -R  /opt/vocbench3/'
           containers:
             - name: "vocbench-${env}"
               terminationMessagePath: /dev/termination-log
@@ -86,6 +105,9 @@ objects:
                 requests:
                   cpu: '${cpu_requested}m'
                   memory: '${memory_requested}Mi'
+              securityContext:
+                privileged: false
+                runAsUser: 100
               ports:
                 - containerPort: ${{svc_port}}
                   protocol: TCP
