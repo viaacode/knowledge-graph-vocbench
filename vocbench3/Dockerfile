@@ -16,7 +16,9 @@ RUN set -eux ; \
 
 COPY ./etc/org.ops4j.pax.logging.cfg ./opt/vocbench3/semanticturkey-${st_version}/etc/org.ops4j.pax.logging.cfg
 
+
 WORKDIR /opt/vocbench3/semanticturkey-$st_version
+
 
 EXPOSE 1979
 # Create a group and user
