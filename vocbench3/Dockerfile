@@ -14,7 +14,9 @@ RUN set -eux ; \
 	sed -i 's/\(data\.dir\)=.*/\1=..\/data\/SemanticTurkeyData/' /opt/vocbench3/semanticturkey-${st_version}/etc/it.uniroma2.art.semanticturkey.cfg ; \
 	rm /tmp/vocbench3-${vb_version}-full.zip
 
-WORKDIR /opt/vocbench3/semanticturkey-$st_version
+COPY ./etc/org.ops4j.pax.logging.cfg ./opt/vocbench3/semanticturkey-${st_version}/etc/org.ops4j.pax.logging.cfg
+
+WORKDIR /opt/vocbench3/semanticturkey-$st_version 
 
 EXPOSE 1979
 
