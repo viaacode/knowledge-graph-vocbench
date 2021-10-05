@@ -15,6 +15,8 @@ RUN set -eux ; \
 	rm /tmp/vocbench3-${vb_version}-full.zip
 
 COPY ./etc/org.ops4j.pax.logging.cfg ./opt/vocbench3/semanticturkey-${st_version}/etc/org.ops4j.pax.logging.cfg
+COPY ./etc/saml-login.properties ./opt/vocbench3/semanticturkey-${st_version}/etc/saml-login.properties
+COPY ./etc/saml-login.xml ./opt/vocbench3/semanticturkey-${st_version}/etc/saml-login.xml
 
 
 WORKDIR /opt/vocbench3/semanticturkey-$st_version

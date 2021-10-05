@@ -1,0 +1,10 @@
+# A value between https or http. It is related to the protocol used by the server (service provider) on which VocBench will be deployed.
+saml.scheme=https
+# The name of the service provider (without "http://" and without "/" at the end).
+saml.serverName=example.org
+# The entityID of the Identity Provider. Take this value from metadata file received from the team responsible for registering your instance.
+saml.defaultIDP=entityID
+# The base url of the server (service provider) --> scheme://serverName/contextPath
+saml.entityBaseURL=https://example.org/semanticturkey
+# The url of VocBench
+saml.redirect=https://example.org/vocbench3/opt/vocbench3/semanticturkey-10.1/etc/o/opt/opt/op/opt/vocbenc/opt//opt/vocbench3/opt/v/opt/voc/opt/v/opt/voc/opt/opt/v/opt/opt/op/op/o////
