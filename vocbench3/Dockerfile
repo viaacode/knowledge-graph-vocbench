@@ -16,10 +16,16 @@ RUN set -eux ; \
 
 COPY ./etc/org.ops4j.pax.logging.cfg ./opt/vocbench3/semanticturkey-${st_version}/etc/org.ops4j.pax.logging.cfg
 
-WORKDIR /opt/vocbench3/semanticturkey-$st_version 
+
+WORKDIR /opt/vocbench3/semanticturkey-$st_version
+
 
 EXPOSE 1979
-
+# Create a group and user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown appuser:0  /opt/vocbench3/ -R
+# Tell docker that all future commands should run as the appuser user
+USER appuser
 ENTRYPOINT ["bin/karaf"]
 CMD ["server"]
 
