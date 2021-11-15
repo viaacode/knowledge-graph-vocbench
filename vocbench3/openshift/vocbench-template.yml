@@ -9,6 +9,56 @@ metadata:
   labels:
     app: "vocbench"
 objects:
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+        
+      name: saml-login-${env}.xml
+      
+      labels:
+        app: vocbench
+        app.kubernetes.io/component: vocbench-${env}
+        app.kubernetes.io/instance: vocbench-${env}
+        app.kubernetes.io/part-of: vocbench
+        component: vocbench
+        
+        env: ${env}
+    data:
+      saml-login.xml: |
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!-- Replace this EntityDescriptor with your metadata -->
+        <EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+        </EntityDescriptor>
+
+        
+        
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+        
+      name: saml-login-${env}.properties
+      
+      labels:
+        app: vocbench
+        app.kubernetes.io/component: vocbench-${env}
+        app.kubernetes.io/instance: vocbench-${env}
+        app.kubernetes.io/part-of: vocbench
+        component: vocbench
+        
+        env: ${env}
+    data:
+      saml-login.properties: |
+        # A value between https or http. It is related to the protocol used by the server (service provider) on which VocBench will be deployed.
+        saml.scheme=https
+        # The name of the service provider (without "http://" and without "/" at the end).
+        saml.serverName=example.org
+        # The entityID of the Identity Provider. Take this value from metadata file received from the team responsible for registering your instance.
+        saml.defaultIDP=entityID
+        # The base url of the server (service provider) --> scheme://serverName/contextPath
+        saml.entityBaseURL=https://example.org/semanticturkey
+        # The url of VocBench
+        saml.redirect=https://example.org/vocbench3
+
   - kind: Service
     apiVersion: v1
     metadata:
@@ -72,14 +122,12 @@ objects:
           annotations:
             openshift.io/generated-by: OpenShiftWebConsole
         spec:
-          volumes:
-            - name: vocbench-${env}
-              persistentVolumeClaim:
-                claimName: vocbench-${env}
+          
+            
           initContainers:
             - resources: {}
               terminationMessagePath: /dev/termination-log
-              name: init-solr-data
+              name: init-data
               command:
                 - /bin/sh
                 - '-c'
@@ -115,11 +163,30 @@ objects:
               volumeMounts:
                 - name: vocbench-${env}
                   mountPath: /opt/vocbench3/data
+                - mountPath: /opt/vocbench3/semanticturkey-${ST_VERSION}/etc/saml-login.properties
+                  name: saml-config
+                  subPath: saml-login.properties
+                - mountPath: /opt/vocbench3/semanticturkey-${ST_VERSION}/etc/saml-login.xml
+                  name: saml-config-xml
+                  subPath: saml-login.xml
               terminationMessagePolicy: File
+                
               image: >-
                 image-registry.openshift-image-registry.svc:5000/metadata-mgm/vocbench:${env}
           restartPolicy: Always
           terminationGracePeriodSeconds: 30
+          volumes:
+            - name: vocbench-${env}
+              persistentVolumeClaim:
+                claimName: vocbench-${env}
+            - configMap:
+                defaultMode: 509
+                name: saml-login-${env}.properties
+              name: saml-config
+            - configMap:
+                defaultMode: 509
+                name: saml-login-${env}.xml
+              name: saml-config-xml
           dnsPolicy: ClusterFirst
           securityContext: {}
           schedulerName: default-scheduler
@@ -131,15 +198,17 @@ objects:
       revisionHistoryLimit: 10
       progressDeadlineSeconds: 600
 parameters:
+  - name: ST_VERSION
+    value: "10.1"
   - name: env
-    value: "env"
+    value: "dev"
   - name: "memory_requested"
     value: "128"
   - name: "memory_limit"
-    value: "328"
+    value: "2048"
   - name: "cpu_requested"
     value: "100"
   - name: "cpu_limit"
-    value: "300"
+    value: "900"
   - name: "svc_port"
     value: "1979"
