@@ -15,8 +15,11 @@ RUN set -eux ; \
 	rm /tmp/vocbench3-${vb_version}-full.zip
 
 COPY ./etc/org.ops4j.pax.logging.cfg ./opt/vocbench3/semanticturkey-${st_version}/etc/org.ops4j.pax.logging.cfg
-## FIX for log4j2 remove when new version is cleared of log4j-vulnerability-cve-2021-44228
-COPY pax-logging-log4j2-1.10.1.jar /opt/vocbench3/semanticturkey-10.1.1/system/org/ops4j/pax/logging/pax-logging-log4j2/1.10.1/pax-logging-log4j2-1.10.1.jar
+## FIX for log4j2 remove when new version is cleared of log4j-vulnerability-cve-2021-44228 
+## disabled fix due brealing deploy nstall artifact: /opt/vocbench3/semanticturkey-10.1.1/deploy/vocbench3-10.1.1.war
+## java.lang.IllegalStateException: Unknown protocol: webbundle
+
+# COPY pax-logging-log4j2-1.10.1.jar /opt/vocbench3/semanticturkey-10.1.1/system/org/ops4j/pax/logging/pax-logging-log4j2/1.10.1/pax-logging-log4j2-1.10.1.jar
 
 WORKDIR /opt/vocbench3/semanticturkey-$st_version
 
